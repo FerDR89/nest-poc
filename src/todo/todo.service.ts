@@ -1,13 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { readFileSync, writeFileSync } from 'node:fs';
 import * as path from 'node:path';
-
-export interface Todo {
-  id: number;
-  title: string;
-  description: string;
-  done: boolean;
-}
+import { Todo } from './interfaces/todo.interface';
 
 @Injectable()
 export class TodoService {
@@ -45,16 +39,39 @@ export class TodoService {
   }
 
   getOneByID(id: number): Todo {
+    this.load();
     return this.todos.find((t) => t.id === id);
   }
 
   createTodo(todo: Pick<Todo, 'description' | 'done' | 'title'>): Todo[] {
+    this.load();
     const newTodo = {
       ...todo,
       id: this.todos.length + 1,
     };
-
     this.todos.push(newTodo);
+    this.save(this.todos);
+    return this.todos;
+  }
+
+  updateTodo(todo: Todo): Todo[] {
+    this.load();
+
+    const foundTodo = this.todos?.find((t) => t.id === todo.id);
+
+    if (!foundTodo) {
+      throw new Error('todo not found');
+    }
+
+    const foundTodoIndex: number = this.todos.findIndex(
+      (t: Todo) => t.id === foundTodo.id,
+    );
+
+    this.todos[foundTodoIndex] = {
+      ...this.todos[foundTodoIndex],
+      ...todo,
+    };
+
     this.save(this.todos);
     return this.todos;
   }
