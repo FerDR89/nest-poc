@@ -3,29 +3,30 @@ import {
   IsInt,
   IsBoolean,
   Min,
-  IsEmpty,
   IsPositive,
   MinLength,
+  IsNotEmpty,
+  IsOptional,
 } from 'class-validator';
 
 export class UpdateTodoDto {
   @IsInt()
   @Min(1)
   @IsPositive()
-  @IsEmpty()
+  @IsNotEmpty()
   id: number;
 
   @IsString()
-  @IsEmpty()
+  @IsOptional()
   @MinLength(2)
   title: string;
 
   @IsString()
-  @IsEmpty()
+  @IsOptional()
   @MinLength(2)
   description: string;
 
   @IsBoolean()
-  @IsEmpty()
+  @IsOptional()
   done: boolean;
 }

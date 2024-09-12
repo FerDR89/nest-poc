@@ -1,17 +1,17 @@
-import { IsString, IsBoolean, IsEmpty, MinLength } from 'class-validator';
+import { IsString, IsBoolean, MinLength, IsNotEmpty } from 'class-validator';
 
 export class CreateTodoDto {
   @IsString()
-  @IsEmpty()
+  @IsNotEmpty()
   @MinLength(2)
   title: string;
 
   @IsString()
-  @IsEmpty()
+  @IsNotEmpty()
   @MinLength(2)
   description: string;
 
   @IsBoolean()
-  @IsEmpty()
+  @IsNotEmpty()
   done: boolean;
 }
