@@ -47,7 +47,7 @@ export class TodoService {
     this.load();
     const newTodo = {
       ...todo,
-      id: this.todos.length + 1,
+      id: this.todos[this.todos.length - 1].id + 1,
     };
     this.todos.push(newTodo);
     this.save(this.todos);
@@ -64,7 +64,7 @@ export class TodoService {
     }
 
     const foundTodoIndex: number = this.todos.findIndex(
-      (t: Todo) => t.id === foundTodo.id,
+      (t) => t.id === foundTodo.id,
     );
 
     this.todos[foundTodoIndex] = {
@@ -74,5 +74,19 @@ export class TodoService {
 
     this.save(this.todos);
     return this.todos;
+  }
+
+  deleteOneById(id: number) {
+    this.load();
+    const removedTodo = this.todos.find((t) => t.id === id);
+
+    if (!removedTodo) {
+      throw new Error('todo not found');
+    }
+
+    const filteredTodoArray = this.todos.filter((t) => t.id !== removedTodo.id);
+    this.todos = filteredTodoArray;
+    this.save(this.todos);
+    return removedTodo;
   }
 }

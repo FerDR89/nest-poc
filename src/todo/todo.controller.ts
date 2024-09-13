@@ -10,6 +10,7 @@ import {
   Patch,
   HttpException,
   HttpStatus,
+  Delete,
 } from '@nestjs/common';
 import { TodoService } from './todo.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
@@ -41,6 +42,21 @@ export class TodoController {
   updateTodo(@Body() todo: UpdateTodoDto): Todo[] {
     try {
       return this.todoService.updateTodo(todo);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: error?.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Delete(':id')
+  deleteTodo(@Param('id', ParseIntPipe) id: number): Todo {
+    try {
+      return this.todoService.deleteOneById(id);
     } catch (error) {
       throw new HttpException(
         {
